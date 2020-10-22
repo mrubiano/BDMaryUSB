@@ -27,7 +27,7 @@ public class baseDatos extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF exists"+TABLA_ESTUDIANTES);
+        db.execSQL("DROP TABLE IF EXISTS estudiantes");
         db.execSQL(TABLA_ESTUDIANTES);
     }
 
@@ -41,7 +41,7 @@ public class baseDatos extends SQLiteOpenHelper {
 
     public List<estudianteModelo> mostrarEstudiantes(){
         SQLiteDatabase bd=getReadableDatabase();
-        Cursor cursor=bd.rawQuery("SELECT * FROM TABLA_ESTUDIANTES",null);
+        Cursor cursor=bd.rawQuery("SELECT * FROM estudiantes",null);
         List<estudianteModelo> listEstudiantes=new ArrayList<>();
         if(cursor.moveToFirst()){
             do{
@@ -49,6 +49,35 @@ public class baseDatos extends SQLiteOpenHelper {
             }while (cursor.moveToNext());
         }
         return listEstudiantes;
+    }
+
+    public estudianteModelo buscarEstudiantes(estudianteModelo listEstudiantes, String codigo){
+        SQLiteDatabase db= getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM estudiantes WHERE CODIGO='"+codigo+"'",null);
+
+        if (cursor.moveToFirst()){
+            do{
+                listEstudiantes.setCarrera(cursor.getString(1));
+                listEstudiantes.setNombre(cursor.getString(2));
+            }while (cursor.moveToNext());
+        }
+        return listEstudiantes;
+    }
+
+    public void editarEstudiante(String codigo, String nombre, String carrera){
+        SQLiteDatabase db= getReadableDatabase();
+        if(db!=null){
+            db.execSQL("UPDATE estudiantes SET CODIGO='"+codigo+"', NOMBRE='"+nombre+"', CARRERA='"+carrera+"' WHERE CODIGO='"+codigo+"'");
+            db.close();
+        }
+    }
+
+    public void eliminarEstudiantes(String codigo){
+        SQLiteDatabase db= getReadableDatabase();
+        if(db!=null){
+            db.execSQL("Delete from estudiantes WHERE CODIGO='"+codigo+"'");
+            db.close();
+        }
     }
 
 }

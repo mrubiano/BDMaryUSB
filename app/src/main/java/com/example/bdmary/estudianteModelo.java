@@ -11,6 +11,10 @@ public class estudianteModelo {
 
     }
 
+    public estudianteModelo() {
+
+    }
+
     public String getCodigo() {
         return codigo;
     }
